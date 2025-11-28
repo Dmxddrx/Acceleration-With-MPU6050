@@ -41,47 +41,60 @@ void General_Run(void) {
     MPU6050_Init(&hi2c1);
 
     float ax, ay, az, gx, gy, gz;
-    AccidentLevel level;
 
     char line[32];
     char fstr[16];
 
     OLED_Clear();   // clear only once at start
-    OLED_Print(0, 0, "Status:");
-    OLED_Print(0, 16, "Acceleration:");
-    OLED_Print(0, 38, "Angular Velocity:");
+    OLED_Print(39, 0, "MPU6050");
+    OLED_Rectangle(0, 12, 128, 1);
+    OLED_Print(0, 16, "ACC:");
+    OLED_Rectangle(0, 38, 128, 1);
+    OLED_Print(0, 42, "GYR:");
     OLED_Update();
 
     while (1) {
     	// Read Sensors
         MPU6050_ReadAccelGyro(&ax, &ay, &az, &gx, &gy, &gz);
-        level = MPU6050_CheckAccident(ax, ay, az, gx, gy, gz);
         // calculate magnitude here
         float accMag = sqrtf(ax*ax + ay*ay + az*az);
         float gyrMag = sqrtf(gx*gx + gy*gy + gz*gz);
 
-        // Update Status line
-        OLED_ClearArea(78, 0, 50, 10); // erase old text
 
-        if (level == ACCIDENT_NONE)        		OLED_Print(50, 0, "Safe");
-        else if (level == ACCIDENT_MILD)  		OLED_Print(50, 0, "Level 1");
-        else if (level == ACCIDENT_MODERATE) 	OLED_Print(50, 0, "Level 2");
-        else if (level == ACCIDENT_SEVERE)   	OLED_Print(50, 0, "Level 3");
-
-
-        // --- Update magnitude ---
+        // ------------------ ACCELERATION ------------------
+        // Acceleration magnitude
         float_to_str(accMag, fstr, sizeof(fstr), 2);
-        snprintf(line, sizeof(line), "%sg", fstr);
-        OLED_ClearArea(0, 27, 128, 10);
-        OLED_Print(0, 27, line);
+        snprintf(line, sizeof(line), "%s g", fstr);
+        OLED_ClearArea(30, 16, 98, 10);
+        OLED_Print(30, 16, line);
 
-        float_to_str(gyrMag, fstr, sizeof(fstr), 2);
-		snprintf(line, sizeof(line), "%s dec/s", fstr);
-		OLED_ClearArea(49, 27, 128, 10);
-		OLED_Print(49, 27, line);
+        //Acceleration raw values
+        float ax_dps = ax / 16384.0f;
+        float ay_dps = ay / 16384.0f;
+        float az_dps = az / 16384.0f;
+
+        char ax_str[12], ay_str[12], az_str[12];
+
+        float_to_str(ax_dps, ax_str, sizeof(ax_str), 1);
+        float_to_str(ay_dps, ay_str, sizeof(ay_str), 1);
+        float_to_str(az_dps, az_str, sizeof(az_str), 1);
+
+        OLED_ClearArea(0, 27, 128, 10);
+
+        // Print accRaw
+        OLED_Print(0, 27, ax_str);   // AX
+        OLED_Print(42, 27, ay_str);   // AY
+        OLED_Print(84, 27, az_str);   // AZ
+
 
         // ------------------ ANGULAR VELOCITY ------------------
+        //Gyroscope magnitude
+        float_to_str(gyrMag, fstr, sizeof(fstr), 2);
+		snprintf(line, sizeof(line), "%s dec/s", fstr);
+		OLED_ClearArea(30, 42, 128, 10);
+		OLED_Print(30, 42, line);
 
+		//Gyroscope raw values
         float gx_dps = gx / 131.0f;
         float gy_dps = gy / 131.0f;
         float gz_dps = gz / 131.0f;
@@ -92,13 +105,12 @@ void General_Run(void) {
         float_to_str(gy_dps, gy_str, sizeof(gy_str), 1);
         float_to_str(gz_dps, gz_str, sizeof(gz_str), 1);
 
-        // Clear full area where GX, GY, GZ will print
-        OLED_ClearArea(30, 38, 98, 10);
+        OLED_ClearArea(0, 53, 128, 10);
 
-        // Print in required user positions
-        OLED_Print(0, 38, gx_str);   // GX
-        OLED_Print(42, 38, gy_str);   // GY
-        OLED_Print(84, 38, gz_str);   // GZ */
+        // Print gyroRaw
+        OLED_Print(0, 53, gx_str);   // GX
+        OLED_Print(42, 53, gy_str);   // GY
+        OLED_Print(84, 53, gz_str);   // GZ */
 
         OLED_Update();   // refresh once per loop
 
