@@ -46,16 +46,10 @@ void General_Run(void) {
     char line[32];
     char fstr[16];
 
-    char lat_str[20];
-    char lon_str[20];
-
-
     OLED_Clear();   // clear only once at start
-    OLED_Rectangle(74, 0, 1, 12);
-    OLED_Rectangle(0, 13, 128, 1);
-    OLED_Print(0, 0, "ACC:");
-    OLED_Print(0, 16, "GPS:");
-    OLED_Print(0, 27, "AnV:");
+    OLED_Print(0, 0, "Status:");
+    OLED_Print(0, 16, "Acceleration:");
+    OLED_Print(0, 38, "Angular Velocity:");
     OLED_Update();
 
     while (1) {
@@ -69,29 +63,24 @@ void General_Run(void) {
         // Update Status line
         OLED_ClearArea(78, 0, 50, 10); // erase old text
 
-        if (level == ACCIDENT_NONE)        		OLED_Print(89, 0, "Safe");
-        else if (level == ACCIDENT_MILD)  		OLED_Print(78, 0, "Level 1");
-        else if (level == ACCIDENT_MODERATE) 	OLED_Print(78, 0, "Level 2");
-        else if (level == ACCIDENT_SEVERE)   	OLED_Print(78, 0, "Level 3");
+        if (level == ACCIDENT_NONE)        		OLED_Print(50, 0, "Safe");
+        else if (level == ACCIDENT_MILD)  		OLED_Print(50, 0, "Level 1");
+        else if (level == ACCIDENT_MODERATE) 	OLED_Print(50, 0, "Level 2");
+        else if (level == ACCIDENT_SEVERE)   	OLED_Print(50, 0, "Level 3");
 
 
         // --- Update magnitude ---
         float_to_str(accMag, fstr, sizeof(fstr), 2);
         snprintf(line, sizeof(line), "%sg", fstr);
-        OLED_ClearArea(30, 0, 42, 10);
-        OLED_Print(30, 0, line);
+        OLED_ClearArea(0, 27, 128, 10);
+        OLED_Print(0, 27, line);
 
         float_to_str(gyrMag, fstr, sizeof(fstr), 2);
 		snprintf(line, sizeof(line), "%s dec/s", fstr);
-		OLED_ClearArea(30, 27, 98, 10);
-		OLED_Print(30, 27, line);
-
-        // --- Update GPS ---
-		OLED_ClearArea(30, 16, 49, 10);
-
+		OLED_ClearArea(49, 27, 128, 10);
+		OLED_Print(49, 27, line);
 
         // ------------------ ANGULAR VELOCITY ------------------
-
 
         float gx_dps = gx / 131.0f;
         float gy_dps = gy / 131.0f;
@@ -110,74 +99,6 @@ void General_Run(void) {
         OLED_Print(0, 38, gx_str);   // GX
         OLED_Print(42, 38, gy_str);   // GY
         OLED_Print(84, 38, gz_str);   // GZ */
-
-       /* OLED_ClearArea(0, 38, 128, 10);
-
-        if (gotGps && gps.valid) {
-            float_to_str(gps.latitude,  lat_str, sizeof(lat_str), 5);
-            float_to_str(gps.longitude, lon_str, sizeof(lon_str), 5);
-
-            OLED_Print(0, 38, lat_str);    // LAT
-            OLED_Print(64, 38, lon_str);   // LON
-        } else {
-            OLED_Print(0, 38,  "---");
-            OLED_Print(64, 38, "---");
-        } */
-
-         //---- Accident SMS ----
-        //---- Accident SMS ----
-        if (level != ACCIDENT_NONE) {
-
-            // Display "Sending SMS" on OLED
-            OLED_ClearArea(84, 16, 44, 10);    // clear bottom area
-            OLED_Print(84, 16, "SMS...");
-            OLED_Update();
-
-
-
-            // Convert acceleration and angular velocity to strings
-            char acc_str[16], gyr_str[16];
-            float_to_str(accMag, acc_str, sizeof(acc_str), 2);
-            float_to_str(gyrMag, gyr_str, sizeof(gyr_str), 2);
-
-            // Build Google Maps link
-            char location[120];
-            snprintf(location, sizeof(location),
-                     "https://www.google.com/maps?q=%s,%s",
-                     lat_str, lon_str);
-
-            // Determine accident level string
-            char level_str[16];
-            if (level == ACCIDENT_MILD) {
-                snprintf(level_str, sizeof(level_str), "Level 1");
-            } else if (level == ACCIDENT_MODERATE) {
-                snprintf(level_str, sizeof(level_str), "Level 2");
-            } else if (level == ACCIDENT_SEVERE) {
-                snprintf(level_str, sizeof(level_str), "Level 3");
-            }
-
-
-            // Optional: show confirmation on OLED
-            OLED_ClearArea(84, 16, 44, 10);
-            OLED_Print(84, 16, "SMS");
-            OLED_Update();
-
-            // Wait a bit
-            HAL_Delay(1000);
-
-            // Scroll "SMS Sent" to right corner
-            for (int x = 84; x <= 100; x += 2) {
-                OLED_ClearArea(84, 16, 44, 10);
-                OLED_Print(x, 16, "SMS");
-                OLED_Update();
-                HAL_Delay(50);
-            }
-        }
-
-        // --------------------------------------------------------------
-        //                 CANCEL EMERGENCY BUTTON (PB15)
-        // --------------------------------------------------------------
-
 
         OLED_Update();   // refresh once per loop
 
