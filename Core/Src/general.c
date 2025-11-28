@@ -41,10 +41,13 @@ void General_Run(void) {
     MPU6050_Init(&hi2c1);
 
     float ax, ay, az, gx, gy, gz;
+    AccidentLevel level;
 
     char line[32];
     char fstr[16];
 
+    char lat_str[20];
+    char lon_str[20];
 
 
     OLED_Clear();   // clear only once at start
@@ -58,12 +61,19 @@ void General_Run(void) {
     while (1) {
     	// Read Sensors
         MPU6050_ReadAccelGyro(&ax, &ay, &az, &gx, &gy, &gz);
+        level = MPU6050_CheckAccident(ax, ay, az, gx, gy, gz);
         // calculate magnitude here
         float accMag = sqrtf(ax*ax + ay*ay + az*az);
         float gyrMag = sqrtf(gx*gx + gy*gy + gz*gz);
 
         // Update Status line
         OLED_ClearArea(78, 0, 50, 10); // erase old text
+
+        if (level == ACCIDENT_NONE)        		OLED_Print(89, 0, "Safe");
+        else if (level == ACCIDENT_MILD)  		OLED_Print(78, 0, "Level 1");
+        else if (level == ACCIDENT_MODERATE) 	OLED_Print(78, 0, "Level 2");
+        else if (level == ACCIDENT_SEVERE)   	OLED_Print(78, 0, "Level 3");
+
 
         // --- Update magnitude ---
         float_to_str(accMag, fstr, sizeof(fstr), 2);
@@ -79,7 +89,10 @@ void General_Run(void) {
         // --- Update GPS ---
 		OLED_ClearArea(30, 16, 49, 10);
 
+
         // ------------------ ANGULAR VELOCITY ------------------
+
+
         float gx_dps = gx / 131.0f;
         float gy_dps = gy / 131.0f;
         float gz_dps = gz / 131.0f;
@@ -97,6 +110,74 @@ void General_Run(void) {
         OLED_Print(0, 38, gx_str);   // GX
         OLED_Print(42, 38, gy_str);   // GY
         OLED_Print(84, 38, gz_str);   // GZ */
+
+       /* OLED_ClearArea(0, 38, 128, 10);
+
+        if (gotGps && gps.valid) {
+            float_to_str(gps.latitude,  lat_str, sizeof(lat_str), 5);
+            float_to_str(gps.longitude, lon_str, sizeof(lon_str), 5);
+
+            OLED_Print(0, 38, lat_str);    // LAT
+            OLED_Print(64, 38, lon_str);   // LON
+        } else {
+            OLED_Print(0, 38,  "---");
+            OLED_Print(64, 38, "---");
+        } */
+
+         //---- Accident SMS ----
+        //---- Accident SMS ----
+        if (level != ACCIDENT_NONE) {
+
+            // Display "Sending SMS" on OLED
+            OLED_ClearArea(84, 16, 44, 10);    // clear bottom area
+            OLED_Print(84, 16, "SMS...");
+            OLED_Update();
+
+
+
+            // Convert acceleration and angular velocity to strings
+            char acc_str[16], gyr_str[16];
+            float_to_str(accMag, acc_str, sizeof(acc_str), 2);
+            float_to_str(gyrMag, gyr_str, sizeof(gyr_str), 2);
+
+            // Build Google Maps link
+            char location[120];
+            snprintf(location, sizeof(location),
+                     "https://www.google.com/maps?q=%s,%s",
+                     lat_str, lon_str);
+
+            // Determine accident level string
+            char level_str[16];
+            if (level == ACCIDENT_MILD) {
+                snprintf(level_str, sizeof(level_str), "Level 1");
+            } else if (level == ACCIDENT_MODERATE) {
+                snprintf(level_str, sizeof(level_str), "Level 2");
+            } else if (level == ACCIDENT_SEVERE) {
+                snprintf(level_str, sizeof(level_str), "Level 3");
+            }
+
+
+            // Optional: show confirmation on OLED
+            OLED_ClearArea(84, 16, 44, 10);
+            OLED_Print(84, 16, "SMS");
+            OLED_Update();
+
+            // Wait a bit
+            HAL_Delay(1000);
+
+            // Scroll "SMS Sent" to right corner
+            for (int x = 84; x <= 100; x += 2) {
+                OLED_ClearArea(84, 16, 44, 10);
+                OLED_Print(x, 16, "SMS");
+                OLED_Update();
+                HAL_Delay(50);
+            }
+        }
+
+        // --------------------------------------------------------------
+        //                 CANCEL EMERGENCY BUTTON (PB15)
+        // --------------------------------------------------------------
+
 
         OLED_Update();   // refresh once per loop
 

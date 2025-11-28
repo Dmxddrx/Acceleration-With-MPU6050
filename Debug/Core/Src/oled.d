@@ -1,5 +1,4 @@
-Core/Src/oled.o: ../Core/Src/oled.c ../Core/Inc/oled.h \
- ../Core/Inc/general.h \
+Core/Src/oled.o: ../Core/Src/oled.c ../Core/Inc/oled.h ../Core/Inc/main.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h \
  ../Core/Inc/stm32f1xx_hal_conf.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h \
@@ -23,11 +22,12 @@ Core/Src/oled.o: ../Core/Src/oled.c ../Core/Inc/oled.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h \
  ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h \
+ ../Core/Inc/general.h ../Core/Inc/oled.h ../Core/Inc/mpu6050.h \
  F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/ssd1306.h \
  F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/fonts.h \
  F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/fonts.h
 ../Core/Inc/oled.h:
-../Core/Inc/general.h:
+../Core/Inc/main.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal.h:
 ../Core/Inc/stm32f1xx_hal_conf.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_rcc.h:
@@ -51,6 +51,9 @@ Core/Src/oled.o: ../Core/Src/oled.c ../Core/Inc/oled.h \
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_flash_ex.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_i2c.h:
 ../Drivers/STM32F1xx_HAL_Driver/Inc/stm32f1xx_hal_pwr.h:
+../Core/Inc/general.h:
+../Core/Inc/oled.h:
+../Core/Inc/mpu6050.h:
 F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/ssd1306.h:
 F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/fonts.h:
 F:/Program\ files/STM32CubeIDE_1.18.1/workspace_1.18.1/Acceleration\ With\ MPU6050/Drivers/Middlewares/SSD1306/fonts.h:

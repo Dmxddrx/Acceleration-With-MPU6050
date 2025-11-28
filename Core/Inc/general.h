@@ -1,10 +1,9 @@
 #ifndef GENERAL_H
 #define GENERAL_H
 
-#include "stm32f1xx_hal.h"
+#include "oled.h"
+#include "mpu6050.h"
 
-void General_Run(void);
-void delay_ms(uint32_t ms);
-void Error_Handler_Notify(const char *msg);
+void General_Run(void);   // only the prototype here
 
 #endif

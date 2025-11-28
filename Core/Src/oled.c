@@ -34,20 +34,3 @@ void OLED_Rectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h) {
     SSD1306_DrawFilledRectangle(x, y, w, h, SSD1306_COLOR_WHITE);
 }
 
-// Scroll display content to the right (hardware scroll)
-void OLED_ScrollRight(uint8_t start_page, uint8_t end_page)
-{
-    SSD1306_ScrollRight(start_page, end_page);
-}
-
-// Scroll display content to the left (hardware scroll)
-void OLED_ScrollLeft(uint8_t start_page, uint8_t end_page)
-{
-    SSD1306_ScrollLeft(start_page, end_page);
-}
-
-// Stop any scrolling
-void OLED_StopScroll(void)
-{
-    SSD1306_Stopscroll();
-}
