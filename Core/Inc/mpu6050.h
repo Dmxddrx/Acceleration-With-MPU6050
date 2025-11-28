@@ -5,7 +5,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define MPU6050_ADDR       (0x68 << 1) // HAL expects 8-bit address
+//#define MPU6050_ADDR       (0x68 << 1) // HAL expects 8-bit address
 // Registers
 #define MPU6050_REG_PWR_MGMT_1  0x6B
 #define MPU6050_REG_SMPLRT_DIV  0x19
