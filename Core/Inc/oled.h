@@ -1,7 +1,7 @@
 #ifndef OLED_H
 #define OLED_H
 
-#include "main.h"
+#include "general.h"
 
 void OLED_Init(I2C_HandleTypeDef *hi2c);
 void OLED_Clear(void);
