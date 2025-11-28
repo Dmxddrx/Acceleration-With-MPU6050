@@ -4,6 +4,6 @@
 #include "oled.h"
 #include "mpu6050.h"
 
-void General_Run(void);   // only the prototype here
+void General_Run(void);
 
 #endif

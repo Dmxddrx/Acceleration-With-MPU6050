@@ -36,6 +36,7 @@ static void float_to_str(float v, char *out, size_t out_len, int decimals)
     }
 }
 
+// General run for logic
 void General_Run(void) {
     OLED_Init(&hi2c1);
     MPU6050_Init(&hi2c1);
@@ -110,7 +111,7 @@ void General_Run(void) {
         // Print gyroRaw
         OLED_Print(0, 53, gx_str);   // GX
         OLED_Print(42, 53, gy_str);   // GY
-        OLED_Print(84, 53, gz_str);   // GZ */
+        OLED_Print(84, 53, gz_str);   // GZ
 
         OLED_Update();   // refresh once per loop
 
